@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Mi Princesa Luisiana 🙃</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;600;700&family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #020108; 
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+            user-select: none;
+            cursor: grab;
+        }
+        body:active { cursor: grabbing; }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* PANTALLA 1: BIENVENIDA */
+        #screen-welcome {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            background: radial-gradient(circle, rgba(10, 5, 22, 0.98) 0%, rgba(2, 1, 8, 1) 100%);
+            transition: opacity 1.2s ease;
+        }
+
+        .welcome-container {
+            position: relative;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Halo brillante con efecto LATIDO lento */
+        .cosmos-glow {
+            position: absolute;
+            width: 420px; 
+            height: 420px;
+            background: radial-gradient(circle, rgba(211, 10, 167, 0.651) 0%, transparent 75%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            animation: haloHeartbeat 4s infinite ease-in-out;
+        }
+
+        .name-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 80px; 
+            color: #fff;
+            text-shadow: 0 0 20px #f33154, 0 0 40px #8310cf, 0 0 60px #8a1fee;
+            margin: 0;
+            position: relative;
+            z-index: 12;
+        }
+
+        /* Iniciales orbitando */
+        .initials-orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 240px;
+            height: 240px;
+            transform: translate(-50%, -50%);
+            z-index: 11;
+        }
+        .initials-orbit span {
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.45); 
+            position: absolute;
+            animation: initialsOrbit 16s linear infinite;
+        }
+        .initials-orbit span:nth-child(1) { --i:1; top: 0; left: 50%; animation-delay: 0s; }
+        .initials-orbit span:nth-child(2) { --i:2; top: 20%; left: 80%; animation-delay: -3.2s; }
+        .initials-orbit span:nth-child(3) { --i:3; top: 80%; left: 80%; animation-delay: -6.4s; }
+        .initials-orbit span:nth-child(4) { --i:4; top: 100%; left: 50%; animation-delay: -9.6s; }
+        .initials-orbit span:nth-child(5) { --i:5; top: 50%; left: 0; animation-delay: -12.8s; }
+
+        /* Firma "De Roniel" */
+        .signature {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.55);
+            margin-top: 5px; 
+            margin-bottom: 35px; 
+            letter-spacing: 3px;
+        }
+
+        .btn-enter {
+            padding: 16px 55px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(199, 125, 255, 0.5);
+            border-radius: 40px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 20px rgba(114, 9, 183, 0.3);
+            letter-spacing: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-enter:hover {
+            transform: scale(1.08);
+            background: rgba(199, 125, 255, 0.18);
+            box-shadow: 0 0 30px #ff758f, 0 0 10px #fff;
+            border-color: #fff;
+        }
+
+        /* PANTALLA 2: UNIVERSO INTERACTIVO */
+        #screen-space {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 1.5s ease-in;
+        }
+
+        #orbit-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+            pointer-events: none; 
+            will-change: transform;
+        }
+
+        .floating-item {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            cursor: pointer;
+            pointer-events: auto; 
+            will-change: transform, opacity;
+            transition: filter 0.2s;
+        }
+
+        .floating-item:hover {
+            filter: drop-shadow(0 0 20px rgba(255,117,143,0.95)) !important;
+        }
+
+        .card-photo {
+            width: 105px;
+            height: 125px;
+            background: #fff;
+            padding: 5px 5px 18px 5px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.75);
+            border-radius: 4px;
+        }
+        .card-photo img {
+            width: 100%;
+            height: 85%;
+            object-fit: cover;
+        }
+
+        .card-text {
+            background: rgba(20, 10, 35, 0.65);
+            border: 1px solid rgba(255, 117, 143, 0.5);
+            backdrop-filter: blur(5px);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffe5ec;
+            white-space: nowrap;
+            text-shadow: 0 0 5px rgba(255,117,143,0.6);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        /* MODAL DE POEMAS */
+        .poem-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.85);
+            width: 88%;
+            max-width: 440px;
+            background: rgba(5, 2, 12, 0.97);
+            border: 1px solid rgba(199, 125, 255, 0.4);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 0 40px rgba(147, 51, 234, 0.6);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+        }
+
+        .poem-modal.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .poem-modal h3 {
+            color: #ff758f;
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        .poem-modal p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #e0aaff;
+            font-style: italic;
+            white-space: pre-line;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: linear-gradient(45deg, #7209b7, #ff758f);
+            border: none;
+            padding: 10px 30px;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        @keyframes haloHeartbeat {
+            0%, 100% { opacity: 0.45; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.12); }
+        }
+
+        @keyframes initialsOrbit {
+            0% { transform: rotate(0deg) translateX(115px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(115px) rotate(-360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="universeCanvas"></canvas>
+
+    <!-- PANTALLA 1 -->
+    <div id="screen-welcome">
+        <div class="welcome-container">
+            <div class="cosmos-glow"></div>
+            <h1 class="name-title">Luisiana</h1>
+            <div class="initials-orbit">
+                <span>RL</span> <span>LR</span> <span>RL</span> <span>RL</span> <span>LR</span>
+            </div>
+        </div>
+        <p class="signature">De Roniel</p>
+        <button class="btn-enter" onclick="enterCosmos()">ABRIR 💫</button>
+    </div>
+
+    <!-- PANTALLA 2 -->
+    <div id="screen-space">
+        <div class="orbit-container" id="orbit-elements"></div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="poem-modal" id="poemModal">
+        <h3 id="modalTitle">Nuestros aniversario 💙</h3>
+        <p id="modalText">Cargando poema...</p>
+        <button class="close-btn" onclick="closeModal()">Cerrar ⭐</button>
+    </div>
+
+    <audio id="bg-music" src="tu-musica.mp3" loop></audio>
+
+    <script>
+        const canvas = document.getElementById('universeCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        
+        let stars = [];
+        let heartParticles = [];
+        let ringParticles = [];
+        let backgroundStars = []; // Universo estelar de fondo fijo
+        let galaxyFormation = false;
+        
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        let rotationX = 0.3; 
+        let rotationY = 0;
+        let velocityX = 0.002; 
+        let velocityY = 0.003;
+
+        let currentZoom = 1.0;
+        const maxZoom = 2.0; 
+        const minZoom = 0.5; 
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        window.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging || !galaxyFormation) return;
+            const deltaX = e.clientX - previousMousePosition.x;
+            const deltaY = e.clientY - previousMousePosition.y;
+
+            velocityY = deltaX * 0.003;
+            velocityX = deltaY * 0.003;
+
+            rotationY += velocityY;
+            rotationX += velocityX;
+
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+        });
+
+        window.addEventListener('mouseup', () => isDragging = false);
+
+        window.addEventListener('wheel', (e) => {
+            if (!galaxyFormation) return;
+            e.preventDefault();
+            let zoomFactor = e.deltaY * -0.001; 
+            currentZoom += zoomFactor;
+            currentZoom = Math.max(minZoom, Math.min(maxZoom, currentZoom));
+        }, { passive: false });
+
+        let initialDist = null;
+
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 0) return;
+            isDragging = true;
+            previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            
+            if (e.touches.length === 2) {
+                let dx = e.touches[0].clientX - e.touches[1].clientX;
+                let dy = e.touches[0].clientY - e.touches[1].clientY;
+                initialDist = Math.sqrt(dx * dx + dy * dy);
+            } else {
+                initialDist = null;
+            }
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging || !galaxyFormation || e.touches.length === 0) return;
+            
+            if (e.touches.length === 2 && initialDist !== null) {
+                let dx = e.touches[0].clientX - e.touches[1].clientX;
+                let dy = e.touches[0].clientY - e.touches[1].clientY;
+                let newDist = Math.sqrt(dx * dx + dy * dy);
+                
+                let zoomChange = (newDist / initialDist) - 1.0;
+                currentZoom += zoomChange * 0.04; 
+                currentZoom = Math.max(minZoom, Math.min(maxZoom, currentZoom));
+                
+                initialDist = newDist; 
+            } else if (e.touches.length === 1) {
+                const deltaX = e.touches[0].clientX - previousMousePosition.x;
+                const deltaY = e.touches[0].clientY - previousMousePosition.y;
+
+                velocityY = deltaX * 0.004;
+                velocityX = deltaY * 0.004;
+
+                rotationY += velocityY;
+                rotationX += velocityX;
+
+                previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }
+        });
+
+        window.addEventListener('touchend', () => {
+            isDragging = false;
+            initialDist = null;
+        });
+
+        class Vector3 {
+            constructor(x, y, z) { this.x = x; this.y = y; this.z = z; }
+            
+            rotate(angleX, angleY) {
+                let cosY = Math.cos(angleY), sinY = Math.sin(angleY);
+                let x1 = this.x * cosY - this.z * sinY;
+                let z1 = this.x * sinY + this.z * cosY;
+                
+                let cosX = Math.cos(angleX), sinX = Math.sin(angleX);
+                let y1 = this.y * cosX - z1 * sinX;
+                let z2 = this.y * sinX + z1 * cosX;
+                
+                return new Vector3(x1, y1, z2);
+            }
+            
+            project() {
+                let fov = 650 / currentZoom;
+                let perspective = fov / (fov + this.z);
+                return {
+                    x: width / 2 + this.x * perspective,
+                    y: height / 2 + this.y * perspective,
+                    scale: perspective,
+                    zIndex: Math.round(this.z)
+                };
+            }
+        }
+
+        class Particle {
+            constructor(type = 'star') {
+                this.type = type;
+                this.reset();
+            }
+            reset() {
+                this.color = '#fff';
+                this.size = Math.random() * 1.5 + 0.4;
+                this.opacity = Math.random() * 0.6 + 0.4;
+                
+                if (this.type === 'heart') {
+                    this.color = Math.random() > 0.3 ? '#ff4d6d' : '#ff758f';
+                    this.size = Math.random() * 2.5 + 1.2;
+                    let t = Math.random() * Math.PI * 2;
+                    let r = 22; 
+                    let x = 16 * Math.pow(Math.sin(t), 3) * r;
+                    let y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)) * r;
+                    let z = (Math.random() - 0.5) * 100; 
+                    this.pos = new Vector3(x, y, z);
+                } 
+                else if (this.type === 'ring') {
+                    this.color = Math.random() > 0.45 ? '#ffe5ec' : '#c77dff';
+                    this.size = Math.random() * 1.8 + 0.6;
+                    let angle = Math.random() * Math.PI * 2;
+                    let radius = Math.random() * 70 + 480; 
+                    this.pos = new Vector3(Math.cos(angle) * radius, (Math.random()-0.5)*20, Math.sin(angle) * radius);
+                }
+                else {
+                    this.pos = new Vector3((Math.random()-0.5)*width*2.5, (Math.random()-0.5)*height*2.5, (Math.random()-0.5)*1000);
+                }
+            }
+            draw(proj) {
+                if (proj.scale < 0) return;
+                ctx.globalAlpha = this.opacity * proj.scale;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                let calcSize = this.size * proj.scale * (currentZoom * 0.9);
+                if (calcSize < 0.1) calcSize = 0.1;
+                ctx.arc(proj.x, proj.y, calcSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // GENERACIÓN DE PARTICULAS OPTIMIZADA (Menos cantidad pero mejor balanceados para fluidez)
+        for(let i=0; i<450; i++) stars.push(new Particle('star'));
+        for(let i=0; i<850; i++) heartParticles.push(new Particle('heart')); 
+        for(let i=0; i<700; i++) ringParticles.push(new Particle('ring'));
+
+        // NUEVO: Creamos estrellas de fondo estáticas que simulan un UNIVERSO infinito sin causar lag
+        for(let i=0; i<250; i++) {
+            backgroundStars.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                size: Math.random() * 1.2 + 0.2,
+                opacity: Math.random() * 0.8 + 0.5,
+                blinkFactor: Math.random() * 0.02
+            });
+        }
+
+        function drawUniverseBackground() {
+            // Fondo de espacio negro/azul cósmico profundo parejo
+            ctx.fillStyle = '#010005';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Renderizar el universo estelar estático de fondo
+            ctx.fillStyle = '#ffffff';
+            for(let i=0; i<backgroundStars.length; i++) {
+                let s = backgroundStars[i];
+                // Efecto sutil de titileo
+                s.opacity += (Math.random() - 0.5) * 0.04;
+                if(s.opacity < 0.1) s.opacity = 0.1;
+                if(s.opacity > 0.7) s.opacity = 0.7;
+                
+                ctx.globalAlpha = s.opacity;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.globalAlpha = 1.0; // Resetear opacidad
+        }
+
+        function animate() {
+            // ELIMINADO: Los círculos gigantes degradados de fondo radial (radialGradient) que causaban lag y opacaban el canvas
+            drawUniverseBackground();
+            
+            if (!isDragging) {
+                rotationY += velocityY;
+                rotationX += velocityX;
+                velocityY *= 0.90; // Freno más rápido para ganar rendimiento
+                velocityX *= 0.90;
+                rotationY += 0.0015; 
+                rotationX += 0.0005;
+            }
+
+            let allObjects = [];
+
+            if (!galaxyFormation) {
+                stars.forEach(s => {
+                    s.pos.y -= 0.3;
+                    if (s.pos.y < -height) s.pos.y = height;
+                    allObjects.push({obj: s, proj: s.pos.project()});
+                });
+            } else {
+                // Renderizado 3D optimizado
+                let cX3d = rotationX * 0.3, cY3d = rotationY * 0.3;
+                stars.forEach(s => {
+                    let rotated = s.pos.rotate(cX3d, cY3d);
+                    allObjects.push({obj: s, proj: rotated.project()});
+                });
+                heartParticles.forEach(p => {
+                    let rotated = p.pos.rotate(rotationX, rotationY);
+                    allObjects.push({obj: p, proj: rotated.project()});
+                });
+                ringParticles.forEach(p => {
+                    let rotated = p.pos.rotate(rotationX, rotationY);
+                    allObjects.push({obj: p, proj: rotated.project()});
+                });
+            }
+
+            // Ordenamiento por profundidad e impresión veloz en canvas sin sombras pesadas (shadowBlur quitado para máxima fluidez)
+            allObjects.sort((a, b) => b.proj.zIndex - a.proj.zIndex);
+            for(let i=0; i<allObjects.length; i++) {
+                allObjects[i].obj.draw(allObjects[i].proj);
+            }
+            
+            if(galaxyFormation) updateOrbit3D();
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Lista de textos cariñosos e imágenes
+        const itemsData = [
+            { type: 'photo', src: 'foto1.jpg', title:  'mi lokita ', text: 'En el vasto universo de mi vida,\ntu luz es la estrella que me guía.\ngracias por estar siempre para mi,\nen las buenas y las malas mi niña.' },
+            { type: 'text', content: 'Te amo 💙', title: 'Mi Amor', text: 'Eres lo más bonito de mis días, Mi niña. Cada momento contigo vale mas que todo el universo.' },
+            { type: 'photo', src: 'foto2.jpg', title: 'Mi Lugar Favorito 🌌', text: 'Mi lugar favorito en el mundo siempre será a tu lado, sin importar el espacio el lugar ni el tiempo, solo con estar contigo soy feliz.' },
+            { type: 'text', content: 'Mi niña peshosha ✨', title: 'Para Mi niña', text: 'Gracias por tus sonrisas, tus abrazos, tu cariño sin comparacion, tu tiempo y dedicacion, y por haber llegado a mi vida.' },
+            { type: 'photo', src: 'fireman.jpg', title: 'unidos por un hilo rojo', text: 'Cuenta una leyenda que hay un hilo rojo que tenemos todos, que aunque no podemos ver, nos conecta a otro ser.' },
+            { type: 'text', content: 'Te quiero mucho 🥰', title: '4life', text: 'Un infinito no bastaría para demostrarte todo lo que siento por ti mi princesa' },
+            { type: 'text', content: 'Mi vida ♾️', title: 'Amor de mi vida', text: 'Eres el centro de mi galaxia.\nTu amor me inspira cada día.\n no importa donde este siempre estare para ti' },
+            { type: 'text', content: 'Mi cielo ✨', title: 'Siempre juntos', text: 'Tú y yo, escribiendo nuestra propia historia de estrellas.\nPor muchos más meses y años.\n¡Te amo infinito!' },
+            { type: 'text', content: 'Mi reina 👑', title: 'Princesa de mi corazón', text: 'Eres la reina de mi corazón.\nTu sonrisa me ilumina el alma.\n¡Felices 8 meses, Luisiana!' },
+            { type: 'text', content: 'Mi princesa 👸🏻', title: 'la dueña de mi corazón', text: 'Nuestro amor es más grande que todo el universo.\n¡Felices 8 meses, mi niña linda!' }
+        ];
+
+        const floatingElements = [];
+
+        function createFloatingUniverse() {
+            const container = document.getElementById('orbit-elements');
+            
+            itemsData.forEach((data, index) => {
+                const div = document.createElement('div');
+                div.classList.add('floating-item');
+                
+                if(data.type === 'photo') {
+                    div.innerHTML = `<div class="card-photo"><img src="${data.src}" alt="photo"></div>`;
+                } else {
+                    div.innerHTML = `<div class="card-text">${data.content}</div>`;
+                }
+
+                div.onclick = (e) => {
+                    e.stopPropagation(); 
+                    openPoem(data.title, data.text);
+                };
+                container.appendChild(div);
+                
+                let angle = (index / itemsData.length) * Math.PI * 2;
+                let radius = 560; 
+                floatingElements.push({
+                    element: div,
+                    pos: new Vector3(Math.cos(angle) * radius, (Math.random()-0.5)*120, Math.sin(angle) * radius)
+                });
+            });
+        }
+
+        function updateOrbit3D() {
+            for(let i=0; i<floatingElements.length; i++) {
+                let item = floatingElements[i];
+                let rotated = item.pos.rotate(rotationX, rotationY);
+                let proj = rotated.project();
+                
+                // Uso de hardware acceleration para que no de lag al arrastrar o dar zoom
+                item.element.style.transform = `translate3d(calc(-50% + ${rotated.x * proj.scale}px), calc(-50% + ${rotated.y * proj.scale}px), 0) scale(${proj.scale * currentZoom})`;
+                item.element.style.opacity = proj.scale * 1.2;
+                item.element.style.zIndex = proj.zIndex;
+                
+                if (proj.scale < 0.18) item.element.style.display = 'none';
+                else item.element.style.display = 'block';
+            }
+        }
+
+        function enterCosmos() {
+            const welcome = document.getElementById('screen-welcome');
+            const spaceScreen = document.getElementById('screen-space');
+            const music = document.getElementById('bg-music');
+
+            galaxyFormation = true;
+            music.play().catch(e => console.log("Audio en espera."));
+
+            welcome.style.opacity = '0';
+            
+            setTimeout(() => {
+                welcome.style.display = 'none';
+                spaceScreen.style.display = 'block';
+                createFloatingUniverse();
+                
+                setTimeout(() => {
+                    spaceScreen.style.opacity = '1';
+                }, 80);
+            }, 1200);
+        }
+
+        function openPoem(title, text) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalText').innerText = text;
+            document.getElementById('poemModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('poemModal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
