@@ -219,7 +219,6 @@
             object-fit: cover;
         }
 
-        /* Optimización: Cambiado backdrop-filter pesado por un background rgba más oscuro y sólido */
         .card-text {
             background: rgba(10, 3, 18, 0.95);
             border: 2px solid rgba(255, 117, 143, 0.8);
@@ -355,18 +354,14 @@
         let bgCacheValid = false;
 
         // --- SISTEMA DE SPRITES (SÚPER OPTIMIZACIÓN) ---
-        // Aquí dibujamos los brillos una sola vez al cargar para evitar recalculaciones pesadas.
         const spriteCanvas = document.createElement('canvas');
         const spriteCtx = spriteCanvas.getContext('2d');
         spriteCanvas.width = 120;
         spriteCanvas.height = 40;
 
         function preRenderSprites() {
-            // Sprite 0: Brillo Rosa (Corazón principal)
             drawGlowParticle(spriteCtx, 20, 20, 16, '#ff0055');
-            // Sprite 1: Brillo Rosa claro (Corazón secundario)
             drawGlowParticle(spriteCtx, 60, 20, 16, '#ff5080');
-            // Sprite 2: Brillo Morado/Blanco (Espiral/Anillo)
             drawGlowParticle(spriteCtx, 100, 20, 16, '#df80ff');
         }
 
@@ -417,7 +412,7 @@
         }
         window.addEventListener('resize', resize);
         resize();
-        preRenderSprites(); // Ejecutar el pre-renderizado de brillos al inicio
+        preRenderSprites(); 
 
         // --- INTERACCIONES ---
         window.addEventListener('mousedown', (e) => {
@@ -541,7 +536,7 @@
                     const isMainColor = Math.random() > 0.4;
                     this.spriteIndex = isMainColor ? 0 : 1; 
                     const scaleHeart = window.innerWidth < 768 ? 13 : 24;
-                    this.size = Math.random() * 12 + 6; // Tamaño ajustado para render de Sprite
+                    this.size = Math.random() * 12 + 6; 
                     const t = Math.random() * PI2;
                     const sinT = Math.sin(t);
                     const cosT = Math.cos(t);
@@ -551,7 +546,7 @@
                     this.pos = new Vector3(x, y, z);
                 } 
                 else if (this.type === 'ring') {
-                    this.spriteIndex = 2; // Sprite morado/blanco
+                    this.spriteIndex = 2; 
                     this.size = Math.random() * 9 + 4;
                     
                     const theta = Math.random() * Math.PI * 4; 
@@ -578,17 +573,14 @@
                 const calcSize = this.size * proj.scale * currentZoom;
 
                 if (this.spriteIndex !== -1) {
-                    // OPTIMIZACIÓN EXTREMA: Copiar la textura pre-renderizada desde el canvas auxiliar.
-                    // Cero cálculos matemáticos de sombras o gradientes en tiempo de ejecución.
                     const sx = this.spriteIndex * 40;
                     ctx.drawImage(
                         spriteCanvas, 
-                        sx, 0, 40, 40, // Recorte del sprite exacto
-                        proj.x - calcSize, proj.y - calcSize, // Ubicación en pantalla
-                        calcSize * 2, calcSize * 2 // Tamaño de escalado
+                        sx, 0, 40, 40, 
+                        proj.x - calcSize, proj.y - calcSize, 
+                        calcSize * 2, calcSize * 2 
                     );
                 } else {
-                    // Estrellas estáticas normales
                     ctx.fillStyle = this.color;
                     ctx.beginPath();
                     ctx.arc(proj.x, proj.y, calcSize, 0, PI2);
@@ -701,10 +693,16 @@
             { type: 'text', content: 'Mi princesa 👸', title: 'La dueña de mi corazón', text: 'Nuestro amor es más grande que todo el universo.\n¡Felices 8 meses, mi niña linda!' }
         ];
 
-        const floatingElements = [];
+        let floatingElements = [];
         const orbitContainer = document.getElementById('orbit-elements');
 
         function createFloatingUniverse() {
+            // SOLUCIÓN AL DUPLICADO:
+            // 1. Limpiamos cualquier elemento que se haya quedado en el contenedor HTML
+            orbitContainer.innerHTML = '';
+            // 2. Limpiamos el array de posiciones para evitar duplicar las físicas de movimiento
+            floatingElements = [];
+
             const radius = getAdaptiveRadius();
             const fragment = document.createDocumentFragment();
             
