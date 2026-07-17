@@ -23,7 +23,7 @@
             color: #fff;
             user-select: none;
             cursor: grab;
-            touch-action: none;
+            touch-action: none; /* Evita que el navegador interfiera con los gestos táctiles */
         }
         body:active { cursor: grabbing; }
 
@@ -34,8 +34,6 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
         }
 
         /* PANTALLA 1: BIENVENIDA */
@@ -61,17 +59,17 @@
             max-width: 400px;
         }
 
+        /* Halo brillante con efecto LATIDO lento */
         .cosmos-glow {
             position: absolute;
             width: 280px; 
             height: 280px;
-            background: radial-gradient(circle, rgba(255, 20, 147, 0.5) 0%, transparent 75%);
+            background: radial-gradient(circle, rgba(211, 10, 167, 0.5) 0%, transparent 75%);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             border-radius: 50%;
             animation: haloHeartbeat 4s infinite ease-in-out;
-            will-change: transform, opacity;
         }
         
         @media(min-width: 768px) {
@@ -85,7 +83,7 @@
             font-family: 'Dancing Script', cursive;
             font-size: 55px; 
             color: #fff;
-            text-shadow: 0 0 20px #ff1493, 0 0 40px #ff758f;
+            text-shadow: 0 0 20px #f33154, 0 0 40px #8310cf, 0 0 60px #8a1fee;
             margin: 0;
             position: relative;
             z-index: 12;
@@ -95,6 +93,7 @@
             .name-title { font-size: 80px; }
         }
 
+        /* Iniciales orbitando */
         .initials-orbit {
             position: absolute;
             top: 50%;
@@ -115,22 +114,22 @@
             font-family: 'Playfair Display', serif;
             font-size: 11px;
             font-style: italic;
-            color: rgba(255, 255, 255, 0.6); 
+            color: rgba(255, 255, 255, 0.45); 
             position: absolute;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
             animation: initialsOrbit 16s linear infinite;
-            will-change: transform;
         }
         @media(min-width: 768px) {
             .initials-orbit span { font-size: 13px; }
         }
         
+        /* Ajuste de radio dinámico según la pantalla en CSS para la animación base */
         .initials-orbit span:nth-child(1) { --i:1; top: 0; left: 50%; animation-delay: 0s; }
         .initials-orbit span:nth-child(2) { --i:2; top: 20%; left: 80%; animation-delay: -3.2s; }
         .initials-orbit span:nth-child(3) { --i:3; top: 80%; left: 80%; animation-delay: -6.4s; }
         .initials-orbit span:nth-child(4) { --i:4; top: 100%; left: 50%; animation-delay: -9.6s; }
         .initials-orbit span:nth-child(5) { --i:5; top: 50%; left: 0; animation-delay: -12.8s; }
 
+        /* Firma "De Roniel" */
         .signature {
             font-family: 'Montserrat', sans-serif;
             font-weight: 300;
@@ -146,20 +145,21 @@
             font-size: 16px;
             font-weight: 600;
             color: #fff;
-            background: rgba(15, 5, 25, 0.8);
-            border: 2px solid rgba(255, 117, 143, 0.6);
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(199, 125, 255, 0.5);
             border-radius: 40px;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(255, 20, 147, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 0 20px rgba(114, 9, 183, 0.3);
             letter-spacing: 3px;
             transition: all 0.3s ease;
-            will-change: transform, box-shadow;
         }
 
         .btn-enter:hover, .btn-enter:active {
             transform: scale(1.05);
-            background: rgba(255, 117, 143, 0.25);
-            box-shadow: 0 0 35px #ff758f, 0 0 15px #fff;
+            background: rgba(199, 125, 255, 0.18);
+            box-shadow: 0 0 30px #ff758f, 0 0 10px #fff;
             border-color: #fff;
         }
 
@@ -180,6 +180,7 @@
             height: 100%;
             z-index: 4;
             pointer-events: none; 
+            will-change: transform;
         }
 
         .floating-item {
@@ -191,11 +192,10 @@
             will-change: transform, opacity;
             transition: filter 0.2s;
             -webkit-tap-highlight-color: transparent;
-            transform: translateZ(0);
         }
 
         .floating-item:hover {
-            filter: drop-shadow(0 0 15px rgba(255,117,143,0.85)) !important;
+            filter: drop-shadow(0 0 15px rgba(255,117,143,0.95)) !important;
         }
 
         .card-photo {
@@ -203,7 +203,7 @@
             height: 105px;
             background: #fff;
             padding: 4px 4px 14px 4px;
-            box-shadow: 0 8px 25px rgba(255, 20, 147, 0.4);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.75);
             border-radius: 3px;
         }
         @media(min-width: 768px) {
@@ -220,23 +220,48 @@
         }
 
         .card-text {
-            background: rgba(10, 3, 18, 0.95);
-            border: 2px solid rgba(255, 117, 143, 0.8);
-            padding: 8px 16px;
+            background: rgba(20, 10, 35, 0.75);
+            border: 1px solid rgba(255, 117, 143, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            padding: 8px 14px;
             border-radius: 20px;
             font-size: 11px;
             font-weight: 600;
             color: #ffe5ec;
             white-space: nowrap;
-            text-shadow: 0 0 10px rgba(255,117,143,0.9);
-            box-shadow: 0 0 20px rgba(255, 117, 143, 0.4);
+            text-shadow: 0 0 5px rgba(255,117,143,0.6);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
         @media(min-width: 768px) {
             .card-text {
-                padding: 10px 22px;
+                padding: 10px 20px;
                 font-size: 13px;
                 border-radius: 25px;
             }
+        }
+
+        /* TEXTO INFORMATIVO DEBAJO */
+        #tap-instructions {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.75);
+            text-shadow: 0 0 10px rgba(199, 125, 255, 0.8), 0 0 20px rgba(255, 117, 143, 0.5);
+            letter-spacing: 2px;
+            z-index: 8;
+            pointer-events: none;
+            text-align: center;
+            width: 90%;
+            animation: pulseInstructions 2.5s infinite ease-in-out;
+        }
+
+        @keyframes pulseInstructions {
+            0%, 100% { opacity: 0.45; transform: translateX(-50%) scale(0.96); }
+            50% { opacity: 0.95; transform: translateX(-50%) scale(1.04); }
         }
 
         /* MODAL DE POEMAS */
@@ -247,11 +272,13 @@
             transform: translate(-50%, -50%) scale(0.85);
             width: 88%;
             max-width: 400px;
-            background: rgba(4, 1, 10, 0.99);
-            border: 2px solid rgba(255, 117, 143, 0.6);
+            background: rgba(5, 2, 12, 0.97);
+            border: 1px solid rgba(199, 125, 255, 0.4);
             padding: 25px;
             border-radius: 24px;
-            box-shadow: 0 0 50px rgba(255, 20, 147, 0.6);
+            box-shadow: 0 0 40px rgba(147, 51, 234, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             z-index: 100;
             text-align: center;
             opacity: 0;
@@ -259,7 +286,6 @@
             transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.2);
             max-height: 85vh;
             overflow-y: auto;
-            will-change: transform, opacity;
         }
 
         .poem-modal.active {
@@ -272,7 +298,6 @@
             color: #ff758f;
             margin-top: 0;
             font-size: 20px;
-            text-shadow: 0 0 10px rgba(255, 117, 143, 0.5);
         }
 
         .poem-modal p {
@@ -293,17 +318,12 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 14px;
-            box-shadow: 0 0 15px rgba(255, 117, 143, 0.4);
             -webkit-tap-highlight-color: transparent;
-            transition: transform 0.2s;
-        }
-        .close-btn:active {
-            transform: scale(0.95);
         }
 
         @keyframes haloHeartbeat {
-            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.15); }
+            0%, 100% { opacity: 0.45; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.1); }
         }
 
         @keyframes initialsOrbit {
@@ -316,6 +336,7 @@
 
     <canvas id="universeCanvas"></canvas>
 
+    <!-- PANTALLA 1 -->
     <div id="screen-welcome">
         <div class="welcome-container">
             <div class="cosmos-glow"></div>
@@ -328,58 +349,34 @@
         <button class="btn-enter" onclick="enterCosmos()">ABRIR 💫</button>
     </div>
 
+    <!-- PANTALLA 2 -->
     <div id="screen-space">
         <div class="orbit-container" id="orbit-elements"></div>
+        <div id="tap-instructions">✨ Toca cualquier texto o imagen ✨</div>
     </div>
 
+    <!-- MODAL -->
     <div class="poem-modal" id="poemModal">
         <h3 id="modalTitle">Nuestro aniversario 💙</h3>
         <p id="modalText">Cargando poema...</p>
         <button class="close-btn" onclick="closeModal()">Cerrar ⭐</button>
     </div>
 
+    <!-- REPRODUCTOR AJUSTADO -->
     <audio id="bg-music" loop preload="auto">
         <source src="tu-musica.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // --- CONFIGURACIÓN Y OPTIMIZACIÓN CORE ---
         const canvas = document.getElementById('universeCanvas');
-        const ctx = canvas.getContext('2d', { alpha: false }); 
+        const ctx = canvas.getContext('2d');
         let width, height;
         
-        // Canvas fantasma para el fondo
-        const bgCanvas = document.createElement('canvas');
-        const bgCtx = bgCanvas.getContext('2d');
-        let bgCacheValid = false;
-
-        // --- SISTEMA DE SPRITES (SÚPER OPTIMIZACIÓN) ---
-        const spriteCanvas = document.createElement('canvas');
-        const spriteCtx = spriteCanvas.getContext('2d');
-        spriteCanvas.width = 120;
-        spriteCanvas.height = 40;
-
-        function preRenderSprites() {
-            drawGlowParticle(spriteCtx, 20, 20, 16, '#ff0055');
-            drawGlowParticle(spriteCtx, 60, 20, 16, '#ff5080');
-            drawGlowParticle(spriteCtx, 100, 20, 16, '#df80ff');
-        }
-
-        function drawGlowParticle(context, cx, cy, radius, color) {
-            const grad = context.createRadialGradient(cx, cy, 1, cx, cy, radius);
-            grad.addColorStop(0, '#ffffff');
-            grad.addColorStop(0.2, color);
-            grad.addColorStop(0.5, color);
-            grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-            context.fillStyle = grad;
-            context.beginPath();
-            context.arc(cx, cy, radius, 0, Math.PI * 2);
-            context.fill();
-        }
-
         let stars = [];
         let heartParticles = [];
         let ringParticles = [];
+        let sparkleParticles = []; // Nuevos destellos mágicos interactivos
+        let backgroundStars = []; 
         let galaxyFormation = false;
         
         let isDragging = false;
@@ -392,9 +389,8 @@
         let currentZoom = 1.0;
         const maxZoom = 2.2; 
         const minZoom = 0.4; 
-        
-        const PI2 = Math.PI * 2;
 
+        // DETECCIÓN RESPONSIVA: Determina el tamaño del anillo según el dispositivo
         function getAdaptiveRadius() {
             return window.innerWidth < 768 ? 240 : 540; 
         }
@@ -403,18 +399,14 @@
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
             
-            bgCanvas.width = width;
-            bgCanvas.height = height;
-            bgCacheValid = false; 
-            
+            // Ajustar el radio de órbita de las iniciales CSS dinámicamente
             const rootRadius = window.innerWidth < 768 ? "85px" : "115px";
             document.documentElement.style.setProperty('--orbit-radius', rootRadius);
         }
         window.addEventListener('resize', resize);
         resize();
-        preRenderSprites(); 
 
-        // --- INTERACCIONES ---
+        // Controladores de ratón (PC)
         window.addEventListener('mousedown', (e) => {
             isDragging = true;
             previousMousePosition = { x: e.clientX, y: e.clientY };
@@ -425,8 +417,8 @@
             const deltaX = e.clientX - previousMousePosition.x;
             const deltaY = e.clientY - previousMousePosition.y;
 
-            velocityY = deltaX * 0.0015; 
-            velocityX = deltaY * 0.0015;
+            velocityY = deltaX * 0.002;
+            velocityX = deltaY * 0.002;
 
             rotationY += velocityY;
             rotationX += velocityX;
@@ -438,12 +430,12 @@
 
         window.addEventListener('wheel', (e) => {
             if (!galaxyFormation) return;
-            let zoomFactor = e.deltaY * -0.0008; 
+            let zoomFactor = e.deltaY * -0.001; 
             currentZoom += zoomFactor;
             currentZoom = Math.max(minZoom, Math.min(maxZoom, currentZoom));
-        }, { passive: true }); 
+        });
 
-        // Táctil
+        // Controladores Táctiles (Teléfonos optimizado)
         let initialDist = null;
 
         window.addEventListener('touchstart', (e) => {
@@ -458,7 +450,7 @@
             } else {
                 initialDist = null;
             }
-        }, { passive: true });
+        });
 
         window.addEventListener('touchmove', (e) => {
             if (!isDragging || !galaxyFormation || e.touches.length === 0) return;
@@ -469,7 +461,7 @@
                 let newDist = Math.sqrt(dx * dx + dy * dy);
                 
                 let zoomChange = (newDist / initialDist) - 1.0;
-                currentZoom += zoomChange * 0.04; 
+                currentZoom += zoomChange * 0.05; 
                 currentZoom = Math.max(minZoom, Math.min(maxZoom, currentZoom));
                 
                 initialDist = newDist; 
@@ -477,8 +469,8 @@
                 const deltaX = e.touches[0].clientX - previousMousePosition.x;
                 const deltaY = e.touches[0].clientY - previousMousePosition.y;
 
-                velocityY = deltaX * 0.0025;
-                velocityX = deltaY * 0.0025;
+                velocityY = deltaX * 0.003;
+                velocityX = deltaY * 0.003;
 
                 rotationY += velocityY;
                 rotationX += velocityX;
@@ -492,26 +484,25 @@
             initialDist = null;
         });
 
-        // --- LÓGICA 3D ---
         class Vector3 {
             constructor(x, y, z) { this.x = x; this.y = y; this.z = z; }
             
             rotate(angleX, angleY) {
-                const cosY = Math.cos(angleY), sinY = Math.sin(angleY);
-                const x1 = this.x * cosY - this.z * sinY;
-                const z1 = this.x * sinY + this.z * cosY;
+                let cosY = Math.cos(angleY), sinY = Math.sin(angleY);
+                let x1 = this.x * cosY - this.z * sinY;
+                let z1 = this.x * sinY + this.z * cosY;
                 
-                const cosX = Math.cos(angleX), sinX = Math.sin(angleX);
-                const y1 = this.y * cosX - z1 * sinX;
-                const z2 = this.y * sinX + z1 * cosX;
+                let cosX = Math.cos(angleX), sinX = Math.sin(angleX);
+                let y1 = this.y * cosX - z1 * sinX;
+                let z2 = this.y * sinX + z1 * cosX;
                 
                 return new Vector3(x1, y1, z2);
             }
             
             project() {
-                const baseFov = window.innerWidth < 768 ? 400 : 650;
-                const fov = baseFov / currentZoom;
-                const perspective = fov / (fov + this.z);
+                let baseFov = window.innerWidth < 768 ? 400 : 650;
+                let fov = baseFov / currentZoom;
+                let perspective = fov / (fov + this.z);
                 return {
                     x: width / 2 + this.x * perspective,
                     y: height / 2 + this.y * perspective,
@@ -527,159 +518,161 @@
                 this.reset();
             }
             reset() {
-                this.spriteIndex = -1;
                 this.color = '#fff';
-                this.size = Math.random() * 1.4 + 0.4; 
+                this.size = Math.random() * 1.5 + 0.4;
                 this.opacity = Math.random() * 0.6 + 0.4;
                 
                 if (this.type === 'heart') {
-                    const isMainColor = Math.random() > 0.4;
-                    this.spriteIndex = isMainColor ? 0 : 1; 
-                    const scaleHeart = window.innerWidth < 768 ? 13 : 24;
-                    this.size = Math.random() * 12 + 6; 
-                    const t = Math.random() * PI2;
-                    const sinT = Math.sin(t);
-                    const cosT = Math.cos(t);
-                    const x = 16 * Math.pow(sinT, 3) * scaleHeart;
-                    const y = -(13 * cosT - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)) * scaleHeart;
-                    const z = (Math.random() - 0.5) * 50; 
+                    this.color = Math.random() > 0.3 ? '#ff4d6d' : '#ff758f';
+                    let scaleHeart = window.innerWidth < 768 ? 12 : 22;
+                    this.size = Math.random() * 2.2 + 1.0;
+                    let t = Math.random() * Math.PI * 2;
+                    let x = 16 * Math.pow(Math.sin(t), 3) * scaleHeart;
+                    let y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)) * scaleHeart;
+                    let z = (Math.random() - 0.5) * 80; 
                     this.pos = new Vector3(x, y, z);
                 } 
                 else if (this.type === 'ring') {
-                    this.spriteIndex = 2; 
-                    this.size = Math.random() * 9 + 4;
-                    
-                    const theta = Math.random() * Math.PI * 4; 
-                    const arm = Math.random() > 0.5 ? 0 : Math.PI; 
-                    const baseRadius = getAdaptiveRadius() * 0.18; 
-                    
-                    const radius = baseRadius * Math.pow(1.14, theta) + (Math.random() - 0.5) * 40;
-                    const angle = theta + arm;
-
-                    const x = Math.cos(angle) * radius;
-                    const z = Math.sin(angle) * radius;
-                    const y = (Math.random() - 0.5) * 30; 
-
-                    this.pos = new Vector3(x, y, z);
+                    this.color = Math.random() > 0.45 ? '#ffe5ec' : '#c77dff';
+                    this.size = Math.random() * 1.6 + 0.5;
+                    let angle = Math.random() * Math.PI * 2;
+                    let baseRadius = getAdaptiveRadius();
+                    let radius = Math.random() * 50 + (baseRadius - 20); 
+                    this.pos = new Vector3(Math.cos(angle) * radius, (Math.random()-0.5)*20, Math.sin(angle) * radius);
+                }
+                else if (this.type === 'sparkle') {
+                    // Partículas de brillo parpadeantes (destellos)
+                    this.color = '#ffffff';
+                    this.size = Math.random() * 2.2 + 1.2;
+                    this.twinkleSpeed = Math.random() * 0.04 + 0.02;
+                    this.phase = Math.random() * Math.PI * 2;
+                    let angle = Math.random() * Math.PI * 2;
+                    let baseRadius = getAdaptiveRadius();
+                    let radius = Math.random() * (baseRadius + 60); 
+                    this.pos = new Vector3(Math.cos(angle) * radius, (Math.random() - 0.5) * 180, Math.sin(angle) * radius);
                 }
                 else {
                     this.pos = new Vector3((Math.random()-0.5)*width*2.5, (Math.random()-0.5)*height*2.5, (Math.random()-0.5)*1000);
                 }
             }
             draw(proj) {
-                if (proj.scale < 0.05) return;
+                if (proj.scale < 0) return;
                 
-                ctx.globalAlpha = this.opacity * proj.scale;
-                const calcSize = this.size * proj.scale * currentZoom;
-
-                if (this.spriteIndex !== -1) {
-                    const sx = this.spriteIndex * 40;
-                    ctx.drawImage(
-                        spriteCanvas, 
-                        sx, 0, 40, 40, 
-                        proj.x - calcSize, proj.y - calcSize, 
-                        calcSize * 2, calcSize * 2 
-                    );
-                } else {
-                    ctx.fillStyle = this.color;
+                if (this.type === 'sparkle') {
+                    // Parpadeo orgánico usando función seno
+                    let twinkle = 0.2 + 0.8 * Math.abs(Math.sin(Date.now() * this.twinkleSpeed + this.phase));
+                    ctx.globalAlpha = this.opacity * proj.scale * twinkle;
+                    
+                    // Efecto de resplandor para simular destellos cósmicos
+                    ctx.shadowBlur = 12;
+                    ctx.shadowColor = '#ffe5ec';
+                    ctx.fillStyle = '#ffffff';
                     ctx.beginPath();
-                    ctx.arc(proj.x, proj.y, calcSize, 0, PI2);
+                    let calcSize = this.size * proj.scale * (currentZoom * 1.1);
+                    if (calcSize < 0.1) calcSize = 0.1;
+                    ctx.arc(proj.x, proj.y, calcSize, 0, Math.PI * 2);
                     ctx.fill();
+                    
+                    ctx.shadowBlur = 0; // Limpieza del buffer para rendimiento óptimo
+                    return;
                 }
+
+                ctx.globalAlpha = this.opacity * proj.scale;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                let calcSize = this.size * proj.scale * (currentZoom * 0.9);
+                if (calcSize < 0.1) calcSize = 0.1;
+                ctx.arc(proj.x, proj.y, calcSize, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
 
-        // --- INICIALIZACIÓN ---
-        for(let i=0; i<300; i++) stars.push(new Particle('star'));
-        for(let i=0; i<650; i++) heartParticles.push(new Particle('heart')); 
-        for(let i=0; i<600; i++) ringParticles.push(new Particle('ring'));
+        // Cantidades equilibradas para rendimiento móvil fluído
+        for(let i=0; i<350; i++) stars.push(new Particle('star'));
+        for(let i=0; i<700; i++) heartParticles.push(new Particle('heart')); 
+        for(let i=0; i<550; i++) ringParticles.push(new Particle('ring'));
+        for(let i=0; i<120; i++) sparkleParticles.push(new Particle('sparkle')); // Generación de brillos
 
-        let staticBackgroundStars = [];
-        for(let i=0; i<150; i++) {
-            staticBackgroundStars.push({
-                x: Math.random(), 
-                y: Math.random(),
+        for(let i=0; i<180; i++) {
+            backgroundStars.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
                 size: Math.random() * 1.0 + 0.2,
-                opacity: Math.random() * 0.5 + 0.3 
+                opacity: Math.random() * 0.6 + 0.4
             });
         }
 
-        // --- RENDER ---
-        function drawCachedBackground() {
-            if (!bgCacheValid) {
-                bgCtx.fillStyle = '#010005';
-                bgCtx.fillRect(0, 0, width, height);
+        function drawUniverseBackground() {
+            ctx.fillStyle = '#010005';
+            ctx.fillRect(0, 0, width, height);
+            
+            ctx.fillStyle = '#ffffff';
+            for(let i=0; i<backgroundStars.length; i++) {
+                let s = backgroundStars[i];
+                s.opacity += (Math.random() - 0.5) * 0.03;
+                if(s.opacity < 0.1) s.opacity = 0.1;
+                if(s.opacity > 0.7) s.opacity = 0.7;
                 
-                bgCtx.fillStyle = '#ffffff';
-                for(let i=0; i<staticBackgroundStars.length; i++) {
-                    const s = staticBackgroundStars[i];
-                    bgCtx.globalAlpha = s.opacity;
-                    bgCtx.beginPath();
-                    bgCtx.arc(s.x * width, s.y * height, s.size, 0, PI2);
-                    bgCtx.fill();
-                }
-                bgCacheValid = true;
+                ctx.globalAlpha = s.opacity;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fill();
             }
-            ctx.drawImage(bgCanvas, 0, 0);
             ctx.globalAlpha = 1.0; 
         }
 
         function animate() {
-            drawCachedBackground();
+            drawUniverseBackground();
             
             if (!isDragging) {
                 rotationY += velocityY;
                 rotationX += velocityX;
-                velocityY *= 0.93; 
-                velocityX *= 0.93;
+                velocityY *= 0.92; 
+                velocityX *= 0.92;
                 rotationY += 0.0012; 
-                rotationX += 0.0002;
+                rotationX += 0.0004;
             }
 
             let allObjects = [];
 
             if (!galaxyFormation) {
-                for (let i=0; i<stars.length; i++) {
-                    const s = stars[i];
+                stars.forEach(s => {
                     s.pos.y -= 0.3;
                     if (s.pos.y < -height) s.pos.y = height;
                     allObjects.push({obj: s, proj: s.pos.project()});
-                }
+                });
             } else {
-                const cX3d = rotationX * 0.3, cY3d = rotationY * 0.3;
-                
-                for (let i=0; i<stars.length; i++) {
-                    const s = stars[i];
-                    const rotated = s.pos.rotate(cX3d, cY3d);
+                let cX3d = rotationX * 0.3, cY3d = rotationY * 0.3;
+                stars.forEach(s => {
+                    let rotated = s.pos.rotate(cX3d, cY3d);
                     allObjects.push({obj: s, proj: rotated.project()});
-                }
-                
-                for (let i=0; i<heartParticles.length; i++) {
-                    const p = heartParticles[i];
-                    const rotated = p.pos.rotate(rotationX, rotationY);
+                });
+                heartParticles.forEach(p => {
+                    let rotated = p.pos.rotate(rotationX, rotationY);
                     allObjects.push({obj: p, proj: rotated.project()});
-                }
-                
-                for (let i=0; i<ringParticles.length; i++) {
-                    const p = ringParticles[i];
-                    const rotated = p.pos.rotate(rotationX, rotationY);
+                });
+                ringParticles.forEach(p => {
+                    let rotated = p.pos.rotate(rotationX, rotationY);
                     allObjects.push({obj: p, proj: rotated.project()});
-                }
+                });
+                sparkleParticles.forEach(sp => {
+                    let rotated = sp.pos.rotate(rotationX, rotationY);
+                    allObjects.push({obj: sp, proj: rotated.project()});
+                });
             }
 
             allObjects.sort((a, b) => b.proj.zIndex - a.proj.zIndex);
-            
             for(let i=0; i<allObjects.length; i++) {
                 allObjects[i].obj.draw(allObjects[i].proj);
             }
-
+            
             if(galaxyFormation) updateOrbit3D();
 
             requestAnimationFrame(animate);
         }
         animate();
 
-        // --- LÓGICA DE ELEMENTOS INTERACTIVOS ---
+        // Contenidos interactivos
         const itemsData = [
             { type: 'photo', src: 'foto1.jpg', title:  'Mi lokita ', text: 'En el vasto universo de mi vida,\ntu luz es la estrella que me guía.\nGracias por estar siempre para mí,\nen las buenas y las malas mi niña.' },
             { type: 'text', content: 'Te amo 💙', title: 'Mi Amor', text: 'Eres lo más bonito de mis días, Mi niña. Cada momento contigo vale más que todo el universo.' },
@@ -693,25 +686,18 @@
             { type: 'text', content: 'Mi princesa 👸', title: 'La dueña de mi corazón', text: 'Nuestro amor es más grande que todo el universo.\n¡Felices 8 meses, mi niña linda!' }
         ];
 
-        let floatingElements = [];
-        const orbitContainer = document.getElementById('orbit-elements');
+        const floatingElements = [];
 
         function createFloatingUniverse() {
-            // SOLUCIÓN AL DUPLICADO:
-            // 1. Limpiamos cualquier elemento que se haya quedado en el contenedor HTML
-            orbitContainer.innerHTML = '';
-            // 2. Limpiamos el array de posiciones para evitar duplicar las físicas de movimiento
-            floatingElements = [];
-
+            const container = document.getElementById('orbit-elements');
             const radius = getAdaptiveRadius();
-            const fragment = document.createDocumentFragment();
             
             itemsData.forEach((data, index) => {
                 const div = document.createElement('div');
                 div.classList.add('floating-item');
                 
                 if(data.type === 'photo') {
-                    div.innerHTML = `<div class="card-photo"><img src="${data.src}" alt="photo" loading="lazy"></div>`; 
+                    div.innerHTML = `<div class="card-photo"><img src="${data.src}" alt="photo"></div>`;
                 } else {
                     div.innerHTML = `<div class="card-text">${data.content}</div>`;
                 }
@@ -721,6 +707,7 @@
                     openPoem(data.title, data.text);
                 };
                 
+                // Evento alternativo para pantallas táctiles para que responda instantáneo
                 div.addEventListener('touchend', (e) => {
                     if(!isDragging) {
                         e.preventDefault();
@@ -728,51 +715,32 @@
                     }
                 });
 
-                fragment.appendChild(div);
+                container.appendChild(div);
                 
-                const angle = (index / itemsData.length) * Math.PI * 2;
-                const heightSpread = window.innerWidth < 768 ? 50 : 100;
-                const placementRadius = radius * (0.6 + Math.random() * 0.35); 
-
+                let angle = (index / itemsData.length) * Math.PI * 2;
+                let heightSpread = window.innerWidth < 768 ? 60 : 120;
                 floatingElements.push({
                     element: div,
-                    pos: new Vector3(Math.cos(angle) * placementRadius, (Math.random()-0.5)*heightSpread, Math.sin(angle) * placementRadius)
+                    pos: new Vector3(Math.cos(angle) * radius, (Math.random()-0.5)*heightSpread, Math.sin(angle) * radius)
                 });
             });
-            orbitContainer.appendChild(fragment);
         }
 
         function updateOrbit3D() {
-            const cosX = Math.cos(rotationX), sinX = Math.sin(rotationX);
-            const cosY = Math.cos(rotationY), sinY = Math.sin(rotationY);
-
             for(let i=0; i<floatingElements.length; i++) {
-                const item = floatingElements[i];
-                const x1 = item.pos.x * cosY - item.pos.z * sinY;
-                const z1 = item.pos.x * sinY + item.pos.z * cosY;
-                const yrotated = item.pos.y * cosX - z1 * sinX;
-                const zrotated = item.pos.y * sinX + z1 * cosX;
-                const baseFov = window.innerWidth < 768 ? 400 : 650;
-                const fov = baseFov / currentZoom;
-                const scale = fov / (fov + zrotated);
+                let item = floatingElements[i];
+                let rotated = item.pos.rotate(rotationX, rotationY);
+                let proj = rotated.project();
                 
-                if (scale < 0.15) {
-                    if (item.element.style.display !== 'none') item.element.style.display = 'none';
-                    continue;
-                }
+                item.element.style.transform = `translate3d(calc(-50% + ${rotated.x * proj.scale}px), calc(-50% + ${rotated.y * proj.scale}px), 0) scale(${proj.scale * currentZoom})`;
+                item.element.style.opacity = proj.scale * 1.3;
+                item.element.style.zIndex = proj.zIndex;
                 
-                if (item.element.style.display === 'none') item.element.style.display = 'block';
-
-                const x2d = x1 * scale;
-                const y2d = yrotated * scale;
-                
-                item.element.style.transform = `translate3d(calc(-50% + ${x2d}px), calc(-50% + ${y2d}px), 0) scale(${scale * currentZoom})`;
-                item.element.style.opacity = scale * 1.2;
-                item.element.style.zIndex = Math.round(zrotated);
+                if (proj.scale < 0.15) item.element.style.display = 'none';
+                else item.element.style.display = 'block';
             }
         }
 
-        // --- COMPORTAMIENTO ---
         function enterCosmos() {
             const welcome = document.getElementById('screen-welcome');
             const spaceScreen = document.getElementById('screen-space');
@@ -780,14 +748,15 @@
 
             galaxyFormation = true;
             
+            // INTENTO DE REPRODUCCIÓN AUTOMÁTICA AL INTERACTUAR CON EL BOTÓN
             if(music) {
                 music.play().then(() => {
-                    console.log("Música iniciada.");
+                    console.log("Música iniciada correctamente.");
                 }).catch(e => {
-                    console.log("Fallo reproducción automática.", e);
-                    const forcePlay = () => { music.play(); };
-                    document.addEventListener('click', forcePlay, { once: true });
-                    document.addEventListener('touchstart', forcePlay, { once: true });
+                    console.log("Fallo la reproducción directa: ", e);
+                    // Forzar activación mediante contexto web audio alternativa si es necesario
+                    document.addEventListener('click', () => { music.play(); }, { once: true });
+                    document.addEventListener('touchstart', () => { music.play(); }, { once: true });
                 });
             }
 
@@ -800,7 +769,7 @@
                 
                 setTimeout(() => {
                     spaceScreen.style.opacity = '1';
-                }, 50);
+                }, 80);
             }, 1200);
         }
 
